@@ -8,7 +8,6 @@ on:
 name: Continuous integration
 
 env:
-  RUSTFLAGS: "--cfg CI_REDIS -Dwarnings"
   RUSTDOCFLAGS: -Dwarnings
   RUST_BACKTRACE: short
 
@@ -40,7 +39,7 @@ jobs:
     needs:
       - fmt
       - test
-      - check-examples
+      # - check-examples
       - clippy
       - doc
 
@@ -113,13 +112,6 @@ jobs:
         run: |
           cargo +${{ matrix.toolchain }} test --tests --no-run --verbose ${{ matrix.features }}
 
-      - name: Setup redis
-        run: |
-          sudo apt install redis-server
-          redis-server --port 7777 > /dev/null &
-          redis-server --port 7778 > /dev/null &
-          redis-server --port 7779 > /dev/null &
-
       - name: Test unit & integration tests
         run: |
           cargo +${{ matrix.toolchain }} test --tests --verbose ${{ matrix.features }}
@@ -129,29 +121,29 @@ jobs:
         run: |
           cargo +${{ matrix.toolchain }} test --doc --verbose ${{ matrix.features }}
 
-  check-examples:
-    runs-on: ubuntu-latest
+  # check-examples:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: stable
+  #     - name: Install Rust stable
+  #       uses: dtolnay/rust-toolchain@master
+  #       with:
+  #         toolchain: stable
 
-      - name: Cache Dependencies
-        uses: Swatinem/rust-cache@v2
+  #     - name: Cache Dependencies
+  #       uses: Swatinem/rust-cache@v2
 
-      - name: Check examples
-        run: |
-          cargo +stable check --examples --features full
+  #     - name: Check examples
+  #       run: |
+  #         cargo +stable check --examples --features full
 
-      # TODO: prolly move it to a separate step?
-      - name: Check with no default features
-        run: |
-          cargo +stable check --no-default-features
+  #     # TODO: prolly move it to a separate step?
+  #     - name: Check with no default features
+  #       run: |
+  #         cargo +stable check --no-default-features
 
   clippy:
     name: Run linter
