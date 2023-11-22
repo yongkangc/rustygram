@@ -20,13 +20,14 @@
 
 ## Highlights
 
-Easily integrate rustygram into your app to quickly send messages to Telegram bots, groups, and channels if you have the chat ID. Get up and running fast by focusing just on your app's specific messaging needs rather than Telegram API intricacies.
+- Easily integrate rustygram into your app to quickly send messages to Telegram bots, groups, and channels if you have the chat ID.
+
+- Send asynchronous notifications in a reliable way.
 
 ## API overview
 
 - `create_instance` - create a bot instance consistsing of Telegram's bot token, and target chat_id
-- `send_message` - call Telegram bot's API sendMessage to send message synchronously
-- `send_message_async` - call Telegram bot's API sendMessage to send message asynchronously
+- `send_message` - call Telegram bot's API sendMessage to send message asynchronously
 
 ## Examples
 

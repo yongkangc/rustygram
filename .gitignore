@@ -12,3 +12,5 @@ Cargo.lock
 # swap files from vim
 *.swp
 *.swo
+
+.env
