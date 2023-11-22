@@ -147,7 +147,7 @@ See [`CONRIBUTING.md`](CONTRIBUTING.md).
 
 This project is heavily inspired by [teloxide](https://github.com/ExtremelySunnyYk/rustygram). However it is not a fork of teloxide, but a complete rewrite in order to make it more minimal and faster for the use case of sending notifications on telegram.
 
-The simplistic design is inspired by [rustelebot](https://github.com/haxpor/rustelebot) but with more modular and extensible design.
+The simplistic design is inspired by [rustelebot](https://github.com/haxpor/rustelebot) but with more modular and extensible design, also changing the underlying libraries used to be more modern.
 
 ## License
 
