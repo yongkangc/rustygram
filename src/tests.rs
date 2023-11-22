@@ -63,6 +63,7 @@ mod test {
         let bot = get_instance();
 
         let res = bot.send_message("test_send_message_simple", None).await;
+        println!("{:?}", res);
         assert!(res.is_ok());
     }
 }
