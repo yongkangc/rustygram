@@ -1,6 +1,9 @@
 #[cfg(test)]
 mod test {
-    use crate::*; // import lib.rs
+    use crate::{
+        types::{SendMessageOption, SendMessageParseMode},
+        *,
+    }; // import lib.rs
     use std::env;
 
     /// Reading bot token, and chat id for inteacting with telegram bot.
@@ -65,5 +68,60 @@ mod test {
         let res = bot.send_message("test_send_message_simple", None).await;
         println!("{:?}", res);
         assert!(res.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_send_markdown_message() {
+        let bot = get_instance();
+        let m1 = bot.send_message(
+            r#"\[rustygram\] __MarkdownV2__  
+*async msg 1*  
+`Tap to copy this text`\.  
+You can visit my [website](https://github.com/extremelySunnyYK)\.  
+Woot\!"#,
+            Some(SendMessageOption {
+                parse_mode: Some(SendMessageParseMode::MarkdownV2),
+            }),
+        );
+
+        let m2 = bot.send_message(
+            r#"\[rustygram\] __MarkdownV2__  
+*async msg 2*  
+`Tap to copy this text`\.  
+You can visit my [website](https://github.com/extremelySunnyYK)\.  
+Woot\!"#,
+            Some(SendMessageOption {
+                parse_mode: Some(SendMessageParseMode::MarkdownV2),
+            }),
+        );
+
+        assert!(m1.await.is_ok());
+        assert!(m2.await.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_send_html_message() {
+        let bot = get_instance();
+        let m1 = bot.send_message(
+            r#"[rustygram] <u>HTML style</u> - <b>async msg 1</b>
+<code>Tap to copy this text</code>.
+You can visit my <a href="https://github.com/ExtremelySunnyYK">website</a>.
+Woot!"#,
+            Some(SendMessageOption {
+                parse_mode: Some(SendMessageParseMode::HTML),
+            }),
+        );
+        let m2 = bot.send_message(
+            r#"[rustygram] <u>HTML style</u> - <b>async msg 2</b>
+<code>Tap to copy this text</code>.
+You can visit my <a href="https://github.com/ExtremelySunnyYK">website</a>.
+Woot!"#,
+            Some(SendMessageOption {
+                parse_mode: Some(SendMessageParseMode::HTML),
+            }),
+        );
+
+        assert!(m1.await.is_ok());
+        assert!(m2.await.is_ok());
     }
 }
