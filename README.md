@@ -8,7 +8,7 @@
     <img src="https://github.com/ExtremelySunnyYk/rustygram/workflows/Continuous%20integration/badge.svg">
   </a>
   <a href="https://crates.io/crates/rustygram">
-    <img src="https://img.shields.io/crates/v/teloxide.svg">
+    <img src="https://img.shields.io/crates/v/rustygram.svg">
   </a>
   <a href="https://core.telegram.org/bots/api">
     <img src="https://img.shields.io/badge/API%20coverage-Up%20to%206.4%20(inclusively)-green.svg">
