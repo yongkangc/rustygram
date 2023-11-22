@@ -1,6 +1,7 @@
 use std::fmt::{Display, Error, Formatter};
 /// ErrorResult usually returned to indicate result from calling APIs related
 /// functions.
+#[derive(Debug)]
 pub struct ErrorResult {
     pub code: u16,   // error returned code
     pub msg: String, // error string description
