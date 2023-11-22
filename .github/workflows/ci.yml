@@ -84,16 +84,12 @@ jobs:
         include:
           - rust: stable
             toolchain: stable
-            features: "--features full"
           - rust: beta
             toolchain: beta
-            features: "--features full"
           - rust: nightly
             toolchain: nightly-2023-09-27
-            features: "--features full nightly"
           - rust: msrv
             toolchain: 1.68.0
-            features: "--features full"
 
     steps:
       - name: Checkout
@@ -110,16 +106,16 @@ jobs:
       # NB. Don't test (build) examples so we can use non-msrv features in them (--tests/--doc)
       - name: Compile
         run: |
-          cargo +${{ matrix.toolchain }} test --tests --no-run --verbose ${{ matrix.features }}
+          cargo +${{ matrix.toolchain }} test --tests --no-run --verbose
 
       - name: Test unit & integration tests
         run: |
-          cargo +${{ matrix.toolchain }} test --tests --verbose ${{ matrix.features }}
+          cargo +${{ matrix.toolchain }} test --tests --verbose
 
       - name: Test documentation tests
         if: ${{ matrix.rust != 'msrv' }}
         run: |
-          cargo +${{ matrix.toolchain }} test --doc --verbose ${{ matrix.features }}
+          cargo +${{ matrix.toolchain }} test --doc --verbose
 
   # check-examples:
   #   runs-on: ubuntu-latest
@@ -138,7 +134,7 @@ jobs:
 
   #     - name: Check examples
   #       run: |
-  #         cargo +stable check --examples --features full
+  #         cargo +stable check --examples
 
   #     # TODO: prolly move it to a separate step?
   #     - name: Check with no default features
@@ -164,7 +160,7 @@ jobs:
 
       - name: clippy
         run: |
-          cargo clippy --all-targets --features "full nightly"
+          cargo clippy --all-targets
 
   doc:
     name: check docs
@@ -184,4 +180,4 @@ jobs:
 
       - name: rustdoc
         run: |
-          cargo docs # from .cargo/config.toml
+          cargo doc
