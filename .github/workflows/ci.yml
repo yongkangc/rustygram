@@ -11,6 +11,10 @@ env:
   RUSTDOCFLAGS: -Dwarnings
   RUST_BACKTRACE: short
 
+  # ...existing environment variables...
+  TEST_BOT_TOKEN: ${{ secrets.TEST_BOT_TOKEN }}
+  TEST_CHAT_ID: ${{ secrets.TEST_CHAT_ID }}
+
   CARGO_INCREMENTAL: 0
   CARGO_NET_RETRY: 10
   RUSTUP_MAX_RETRIES: 10
