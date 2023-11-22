@@ -35,8 +35,8 @@
 
 ```rust
 fn main() {
- let instance = rustelebot::create_bot("123456:123456", "-1000000");
- if let Err(_) = rustelebot::send_message(&instance, "Hello world", None) {
+ let instance = rustygram::create_bot("123456:123456", "-1000000");
+ if let Err(_) = rustygram::send_message(&instance, "Hello world", None) {
   // error handling here...
  }
 }
@@ -47,17 +47,17 @@ fn main() {
 Send message in `MarkdownV2`
 
 ```rust
-use rustelebot::types::{SendMessageOption, SendMessageParseMode};
+use rustygram::types::{SendMessageOption, SendMessageParseMode};
 
 fn main() {
- let instance = rustelebot::create_instance("123456:123456", "-1000000");
+ let instance = rustygram::create_bot("16", "-1s00");
  let option = SendMessageOption { parse_mode: Some(SendMessageParseMode::MarkdownV2) };
 
  // note on two spaces at the end of the line for a new line in markdown
- if let Err(_) = rustelebot::send_message(&instance,
+ if let Err(_) = rustygram::send_message(&instance,
 r#"__Hello world__
 `Tap to copy this text`
-Visit my [website](https://wasin.io)"#, Some(option)) {
+Visit my [website](https://yong-kang.super.site/)"#, Some(option)) {
   // error handling here...
  }
 }
@@ -66,16 +66,16 @@ Visit my [website](https://wasin.io)"#, Some(option)) {
 Send messsage in `HTML`
 
 ```rust
-use rustelebot::types::{SendMessageOption, SendMessageParseMode};
+use rustygram::types::{SendMessageOption, SendMessageParseMode};
 
 fn main() {
- let instance = rustelebot::create_instance("123456:123456", "-1000000");
+ let instance = rustygram::create_instance("189:blablabla", "-10");
  let option = SendMessageOption { parse_mode: Some(SendMessageParseMode::HTML) };
 
- if let Err(_) = rustelebot::send_message(&instance,
+ if let Err(_) = rustygram::send_message(&instance,
 r#"<u>Hello world</u>
 <code>Tap to copy this text</code>
-Visit my <a href="https://wasin.io">website</a>"#, Some(option)) {
+Visit my <a href="https://yong-kang.super.site/">website</a>"#, Some(option)) {
   // error handling here...
  }
 }
@@ -84,7 +84,7 @@ Visit my <a href="https://wasin.io">website</a>"#, Some(option)) {
 ## Setting up your environment
 
 1. [Download Rust](http://rustup.rs/).
-2. Create a new bot using [@Botfather](https://t.me/botfather) to get a token in the format `123456789:blablabla`.
+2. Create a new bot using [@Botfather](https://t.me/botfather) to get a token in the format `189:blablabla`.
 3. Initialise the `BOT_TOKEN` environmental variable to your token:
 
 ```bash
