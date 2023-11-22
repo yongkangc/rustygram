@@ -17,15 +17,6 @@ const SEND_MESSAGE_METHOD: &str = "sendMessage";
 /// This is the main type of the library, it allows to send requests to the
 /// [Telegram Bot API] and download files.
 ///
-//// ```
-/// # async {
-/// use teloxide_core::prelude::*;
-///
-/// let bot = Bot::new("TOKEN");
-/// dbg!(bot.get_me().await?);
-/// # Ok::<_, teloxide_core::RequestError>(()) };
-/// ```
-///
 /// ## Clone cost
 ///
 /// `Bot::clone` is relatively cheap, so if you need to share `Bot`, it's
