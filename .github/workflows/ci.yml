@@ -1,0 +1,195 @@
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  merge_group:
+
+name: Continuous integration
+
+env:
+  RUSTFLAGS: "--cfg CI_REDIS -Dwarnings"
+  RUSTDOCFLAGS: -Dwarnings
+  RUST_BACKTRACE: short
+
+  CARGO_INCREMENTAL: 0
+  CARGO_NET_RETRY: 10
+  RUSTUP_MAX_RETRIES: 10
+
+  # When updating this, also update:
+  # - crates/teloxide-core/src/codegen.rs
+  # - rust-toolchain.toml
+  rust_nightly: nightly-2023-09-27
+  # When updating this, also update:
+  # - **/README.md
+  # - **/src/lib.rs
+  # - down below in a matrix
+  # - `Cargo.toml`
+  # - **/CHANGELOG.md
+  rust_msrv: 1.68.0
+
+  CI: 1
+
+jobs:
+  # Depends on all action that are required for a "successful" CI run.
+  ci-pass:
+    name: CI succeeded
+    runs-on: ubuntu-latest
+    if: always()
+
+    needs:
+      - fmt
+      - test
+      - check-examples
+      - clippy
+      - doc
+
+    steps:
+      - name: Check whether the needed jobs succeeded or failed
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}
+
+  fmt:
+    name: fmt
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Rust ${{ env.rust_nightly }}
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.rust_nightly }}
+          components: rustfmt
+
+      - name: Cache Dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Check formatting
+        run: |
+          cargo fmt --all -- --check
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+          - msrv
+
+        include:
+          - rust: stable
+            toolchain: stable
+            features: "--features full"
+          - rust: beta
+            toolchain: beta
+            features: "--features full"
+          - rust: nightly
+            toolchain: nightly-2023-09-27
+            features: "--features full nightly"
+          - rust: msrv
+            toolchain: 1.68.0
+            features: "--features full"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Rust ${{ matrix.toolchain }}
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.toolchain }}
+
+      - name: Cache Dependencies
+        uses: Swatinem/rust-cache@v2
+
+      # NB. Don't test (build) examples so we can use non-msrv features in them (--tests/--doc)
+      - name: Compile
+        run: |
+          cargo +${{ matrix.toolchain }} test --tests --no-run --verbose ${{ matrix.features }}
+
+      - name: Setup redis
+        run: |
+          sudo apt install redis-server
+          redis-server --port 7777 > /dev/null &
+          redis-server --port 7778 > /dev/null &
+          redis-server --port 7779 > /dev/null &
+
+      - name: Test unit & integration tests
+        run: |
+          cargo +${{ matrix.toolchain }} test --tests --verbose ${{ matrix.features }}
+
+      - name: Test documentation tests
+        if: ${{ matrix.rust != 'msrv' }}
+        run: |
+          cargo +${{ matrix.toolchain }} test --doc --verbose ${{ matrix.features }}
+
+  check-examples:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+
+      - name: Cache Dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Check examples
+        run: |
+          cargo +stable check --examples --features full
+
+      # TODO: prolly move it to a separate step?
+      - name: Check with no default features
+        run: |
+          cargo +stable check --no-default-features
+
+  clippy:
+    name: Run linter
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Rust ${{ env.rust_nightly }}
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.rust_nightly }}
+          components: clippy
+
+      - name: Cache Dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: clippy
+        run: |
+          cargo clippy --all-targets --features "full nightly"
+
+  doc:
+    name: check docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Rust ${{ env.rust_nightly }}
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.rust_nightly }}
+
+      - name: Cache Dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: rustdoc
+        run: |
+          cargo docs # from .cargo/config.toml

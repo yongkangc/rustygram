@@ -12,4 +12,4 @@ RUSTDOCFLAGS="--cfg docsrs" cargo doc --open --all-features
 cargo +nightly fmt --all -- --check
 ```
 
-To report a bug, suggest new functionality, or ask a question, go to [Issues](https://github.com/ExtremelySunnyYK/rustygram/issues). Try to make MRE (**M**inimal **R**eproducible **E**xample) and specify your teloxide version to let others help you.
+To report a bug, suggest new functionality, or ask a question, go to [Issues](https://github.com/ExtremelySunnyYK/rustygram/issues). Try to make MRE (**M**inimal **R**eproducible **E**xample) and specify your rustygram version to let others help you.

@@ -5,7 +5,7 @@
     <img src="https://docs.rs/teloxide/badge.svg">
   </a>
   <a href="https://github.com/ExtremelySunnyYk/rustygram/actions">
-    <img src="https://github.com/teloxide/teloxide/workflows/Continuous%20integration/badge.svg">
+    <img src="https://github.com/ExtremelySunnyYk/rustygram/workflows/Continuous%20integration/badge.svg">
   </a>
   <a href="https://crates.io/crates/rustygram">
     <img src="https://img.shields.io/crates/v/teloxide.svg">
@@ -77,7 +77,7 @@ See [`CONRIBUTING.md`](CONTRIBUTING.md).
 
 ## Acknowledgements
 
-This project is heavily inspired by [teloxide](https://github.com/teloxide/teloxide). However it is not a fork of teloxide, but a complete rewrite in order to make it more minimal and faster for the use case of sending notifications on telegram.
+This project is heavily inspired by [teloxide](https://github.com/ExtremelySunnyYk/rustygram). However it is not a fork of teloxide, but a complete rewrite in order to make it more minimal and faster for the use case of sending notifications on telegram.
 
 The functionalities are also inspired by [rustelebot](https://github.com/haxpor/rustelebot) which has been a joy to read.
 
