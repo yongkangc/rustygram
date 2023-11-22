@@ -82,7 +82,7 @@ impl Bot {
 
 /// Core Functionality
 impl Bot {
-    /// Sends a request to the Telegram Bot API asynchronously using the reqwest client and returns the result
+    /// Sends a request to the Telegram Bot API asynchronously
     pub async fn send_message(
         &self,
         msg: &str,
