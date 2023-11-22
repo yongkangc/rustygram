@@ -81,19 +81,13 @@ jobs:
       matrix:
         rust:
           - stable
-          - beta
           - nightly
-          - msrv
 
         include:
           - rust: stable
             toolchain: stable
-          - rust: beta
-            toolchain: beta
           - rust: nightly
             toolchain: nightly-2023-09-27
-          - rust: msrv
-            toolchain: 1.68.0
 
     steps:
       - name: Checkout
