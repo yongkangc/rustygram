@@ -67,6 +67,7 @@ mod test {
 
         let res = bot.send_message("test_send_message_simple", None).await;
         println!("{:?}", res);
+        println!("t{}, id{}", bot.token, bot.chat_id);
         assert!(res.is_ok());
     }
 
