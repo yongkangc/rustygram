@@ -1,14 +1,12 @@
 use reqwest::Client;
-use serde::{de::DeserializeOwned, Serialize};
-use std::{future::Future, sync::Arc, time::Duration};
+use std::{sync::Arc, time::Duration};
 
 use crate::{
     errors::{ErrorResult, TelegramErrorResult},
-    types::{SendMessageOption, StatusCode},
+    types::{RequestObj, SendMessageOption, StatusCode},
     utils,
 };
 
-// const BOT_TOKEN: &str = "BOT_TOKEN";
 pub const TELEGRAM_API_URL: &str = "https://api.telegram.org";
 const SEND_MESSAGE_METHOD: &str = "sendMessage";
 
@@ -39,8 +37,8 @@ impl Bot {
     /// [http-client](reqwest::Client).
     ///
     /// # Panics
-    ///
     /// If it cannot create [`reqwest::Client`].
+    ///
     pub fn new<S>(token: S, chat_id: S) -> Self
     where
         S: Into<String>,
@@ -90,34 +88,8 @@ impl Bot {
         msg: &str,
         options: Option<SendMessageOption>,
     ) -> Result<(), ErrorResult> {
-        // declare a request struct used only in this function scope
-        // NOTE: serde::Serialize can work with &str
-        #[derive(Debug, serde::Serialize)]
-        struct RequestObj<'a> {
-            chat_id: &'a str,
-            text: &'a str,
+        let request_json_obj = self.build_request_obj(msg, options);
 
-            // this is required unfortunately, see https://github.com/serde-rs/serde/issues/947
-            #[serde(skip_serializing_if = "Option::is_none")]
-            parse_mode: Option<&'a str>,
-        }
-
-        // create a request object which contains parameters needed for the API
-        let request_json_obj = RequestObj {
-            chat_id: &self.chat_id,
-            text: msg,
-            parse_mode: if options.is_some() && options.as_ref().unwrap().parse_mode.is_some() {
-                Some(utils::get_send_message_parse_mode_str(
-                    options.unwrap().parse_mode.unwrap(),
-                ))
-            } else {
-                None
-            },
-        };
-
-        // telegram supports both GET, and POST with various content-type
-        // 'application/json' is one of them that telegram supports
-        // makes a request using the reqwest client
         let response = self
             .client
             .post(method_url(
@@ -132,13 +104,13 @@ impl Bot {
         match response {
             Ok(res) => {
                 if res.status().is_success() {
-                    return Ok(());
+                    Ok(())
                 } else {
                     match res.json::<TelegramErrorResult>().await {
-                        Ok(json) => {
+                        Ok(err_result) => {
                             return utils::create_error_result_str(
                                 StatusCode::ErrorInternalError,
-                                &json.description.to_owned(),
+                                &err_result.description.to_owned(),
                             )
                         }
                         Err(_) => {
@@ -157,6 +129,14 @@ impl Bot {
                 )
             }
         }
+    }
+    fn build_request_obj(&self, msg: &str, options: Option<SendMessageOption>) -> RequestObj {
+        let parse_mode = options
+            .as_ref()
+            .and_then(|option| option.parse_mode.as_ref()) // Avoid repeated unwrap calls
+            .map(|mode| utils::get_send_message_parse_mode_str(mode).to_owned());
+
+        RequestObj::new(&self.chat_id, msg, parse_mode)
     }
 }
 

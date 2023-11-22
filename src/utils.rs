@@ -11,7 +11,7 @@ use crate::{
 ///
 /// # Arguments
 /// * `mode` - parse mode
-pub fn get_send_message_parse_mode_str(mode: SendMessageParseMode) -> &'static str {
+pub fn get_send_message_parse_mode_str(mode: &SendMessageParseMode) -> &'static str {
     match mode {
         SendMessageParseMode::MarkdownV2 => "MarkdownV2",
         SendMessageParseMode::HTML => "HTML",

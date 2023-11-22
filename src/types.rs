@@ -23,3 +23,26 @@ pub enum StatusCode {
     /// value will be used.
     ErrorInternalError,
 }
+
+/// Request Object for `sendMessage` API
+/// See https://core.telegram.org/bots/api#sendmessage
+/// NOTE: serde::Serialize can work with &str
+#[derive(Debug, serde::Serialize)]
+pub struct RequestObj {
+    chat_id: String,
+    text: String,
+    // this is required unfortunately, see https://github.com/serde-rs/serde/issues/947
+    #[serde(skip_serializing_if = "Option::is_none")]
+    parse_mode: Option<String>,
+}
+
+impl RequestObj {
+    /// Create a new `RequestObj` with given chat id and message.
+    pub fn new(chat_id: &str, text: &str, parse_mode: Option<String>) -> Self {
+        Self {
+            chat_id: chat_id.to_owned(),
+            text: text.to_owned(),
+            parse_mode,
+        }
+    }
+}
