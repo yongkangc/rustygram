@@ -25,7 +25,7 @@ pub enum StatusCode {
 }
 
 /// Request Object for `sendMessage` API
-/// See https://core.telegram.org/bots/api#sendmessage
+/// See <https://core.telegram.org/bots/api#sendmessage>
 /// NOTE: serde::Serialize can work with &str
 #[derive(Debug, serde::Serialize)]
 pub struct RequestObj {
