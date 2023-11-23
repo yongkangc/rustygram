@@ -1,6 +1,6 @@
 [package]
 name = "rustygram"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["Wasin Thonkaew <https://github.com/extremelySunnyYK>"]
 description = "RustyGram is a minimal and blazing fast telegram notification framework for Rust"
