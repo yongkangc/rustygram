@@ -1,3 +1,5 @@
+#![forbid(unsafe_code)]
+
 /// High Level Wrapper API of Bot.
 ///
 /// This module provides a high-level API for interacting with Telegram's bot API. It provides
