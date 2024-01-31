@@ -20,7 +20,7 @@
 
 ## Highlights
 
-- Easily integrate rustygram into your app to quickly send messages to Telegram bots, groups, and channels if you have the chat ID.
+- Easily integrate rustygram into your rust application to quickly send messages to Telegram bots, groups, and channels.
 
 - Send asynchronous notifications in a reliable way.
 
