@@ -82,7 +82,7 @@ Visit my <a href="https://yong-kang.super.site/">website</a>"#, Some(option)) {
 ```
 
 ### Setting up and testing it as a class
-Check out example.rs
+- Check out [example.rs](https://github.com/yongkangc/rustygram/blob/main/example.rs) where there is a concrete example with tests
 
 ## Setting up your environment
 
@@ -134,12 +134,12 @@ then execute
 
 `cargo test`
 
-some tests will send a single, or multiple messages to specified chat id on behalf
+some tests will send a single, or multiple messages to a specified chat id on behalf
 of such telegram bot. Please take a look at `src/tests.rs`.
 
 ### Note
 
-You can utilize this telegram bot `@username_to_id_bot` in order to get your
+You can utilize this telegram bot `@username_to_id_bot` to get your
 telegram channel's `chat_id`.
 
 ## Contributing
