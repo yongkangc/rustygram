@@ -87,7 +87,7 @@ Visit my <a href="https://yong-kang.super.site/">website</a>"#, Some(option)) {
 
 ### Sending CSV file
 
-````rust
+```rust
 use rustygram::types::{SendMessageOption, SendMessageParseMode};
 
 fn main() {
@@ -117,7 +117,7 @@ $ set BOT_TOKEN=<Your token here>
 
 # Windows PowerShell
 $ $env:BOT_TOKEN=<Your token here>
-````
+```
 
 4. Make sure that your Rust compiler is up to date (`rustygram` currently requires rustc at least version 1.68):
 
