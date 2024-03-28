@@ -81,6 +81,9 @@ Visit my <a href="https://yong-kang.super.site/">website</a>"#, Some(option)) {
 }
 ```
 
+### Setting up and testing it as a class
+Check out example.rs
+
 ## Setting up your environment
 
 1. [Download Rust](http://rustup.rs/).
