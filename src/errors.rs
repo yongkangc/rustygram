@@ -1,4 +1,6 @@
 use std::fmt::{Display, Error, Formatter};
+
+use reqwest::{multipart, StatusCode};
 /// ErrorResult usually returned to indicate result from calling APIs related
 /// functions.
 #[derive(Debug)]
@@ -20,5 +22,22 @@ pub struct TelegramErrorResult {
 impl Display for ErrorResult {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         write!(f, "{}", self.msg)
+    }
+}
+impl From<std::io::Error> for ErrorResult {
+    fn from(err: std::io::Error) -> Self {
+        ErrorResult {
+            code: StatusCode::INTERNAL_SERVER_ERROR.as_u16(),
+            msg: format!("IO Error: {}", err),
+        }
+    }
+}
+
+impl From<reqwest::Error> for ErrorResult {
+    fn from(err: reqwest::Error) -> Self {
+        ErrorResult {
+            code: StatusCode::INTERNAL_SERVER_ERROR.as_u16(),
+            msg: format!("HTTP Request Error: {}", err),
+        }
     }
 }

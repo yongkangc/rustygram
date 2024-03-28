@@ -4,7 +4,7 @@ mod test {
         types::{SendMessageOption, SendMessageParseMode},
         *,
     }; // import lib.rs
-    use std::env;
+    use std::{env, sync::Arc};
 
     /// Reading bot token, and chat id for inteacting with telegram bot.
     ///
@@ -91,5 +91,28 @@ mod test {
 
         assert!(m1.await.is_ok());
         assert!(m2.await.is_ok());
+    }
+    #[tokio::test]
+    async fn test_send_csv() {
+        use std::fs::File;
+        use std::io::Write;
+        use tempfile::tempdir;
+
+        // Create a temporary directory and file for testing
+        let temp_dir = tempdir().unwrap();
+        let file_path = temp_dir.path().join("test.csv");
+        let mut file = File::create(&file_path).unwrap();
+        writeln!(file, "name,age\nJohn,30\nJane,25").unwrap();
+
+        let bot = get_bot();
+        let result = bot.send_csv(file_path.to_str().unwrap(), "test_csv").await;
+
+        // If the result is an error, print the error message
+        if let Err(e) = &result {
+            println!("Error: {}", e);
+        }
+
+        // Assert that the result is Ok
+        assert!(result.is_ok());
     }
 }

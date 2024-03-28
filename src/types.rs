@@ -14,6 +14,7 @@ pub struct SendMessageOption {
 }
 
 /// Status code indicating the result of APIs related function call.
+#[derive(Debug, Clone, Copy)]
 pub enum StatusCode {
     /// Success
     Success = 0,
@@ -22,6 +23,13 @@ pub enum StatusCode {
     /// Whenever Telegram's related operations occurred with error, then this
     /// value will be used.
     ErrorInternalError,
+}
+
+impl StatusCode {
+    /// Get the status code as u16.
+    pub fn as_u16(&self) -> u16 {
+        *self as u16
+    }
 }
 
 /// Request Object for `sendMessage` API

@@ -1,4 +1,9 @@
+use reqwest::header::HeaderMap;
+use reqwest::header::HeaderValue;
+use reqwest::multipart;
 use reqwest::Client;
+use std::fs;
+use std::io::Read;
 use std::{sync::Arc, time::Duration};
 
 use crate::{
@@ -9,6 +14,7 @@ use crate::{
 
 pub const TELEGRAM_API_URL: &str = "https://api.telegram.org";
 const SEND_MESSAGE_METHOD: &str = "sendMessage";
+const SEND_MEDIA_METHOD: &str = "sendMediaGroup";
 
 /// A requests sender.
 ///
@@ -130,6 +136,61 @@ impl Bot {
             }
         }
     }
+
+    pub async fn send_csv(&self, filepath: &str, caption: &str) -> Result<(), ErrorResult> {
+        let mut file = fs::File::open(filepath)?;
+        let mut contents = Vec::new();
+        file.read_to_end(&mut contents)?;
+
+        let file_name = std::path::Path::new(filepath)
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or("file.csv");
+
+        let part = multipart::Part::bytes(contents)
+            .file_name(file_name.to_string())
+            .mime_str("text/csv")?;
+
+        let media = serde_json::json!([
+            {
+                "type": "document",
+                "media": "attach://file",
+                "caption": caption
+            }
+        ]);
+
+        let form = multipart::Form::new()
+            .text("chat_id", self.chat_id.to_string())
+            .text("media", media.to_string())
+            .part("file", part);
+
+        let response = self
+            .client
+            .post(method_url(self.api_url(), self.token(), "sendMediaGroup"))
+            .header(reqwest::header::CONTENT_TYPE, "multipart/form-data")
+            .multipart(form)
+            .send()
+            .await?;
+
+        if response.status().is_success() {
+            Ok(())
+        } else {
+            let err_result =
+                response
+                    .json::<TelegramErrorResult>()
+                    .await
+                    .map_err(|_| ErrorResult {
+                        code: StatusCode::ErrorInternalError.as_u16(),
+                        msg: "Error converting telegram error response to json".to_string(),
+                    })?;
+
+            Err(ErrorResult {
+                code: StatusCode::ErrorInternalError.as_u16(),
+                msg: err_result.description.to_owned(),
+            })
+        }
+    }
+
     fn build_request_obj(&self, msg: &str, options: Option<SendMessageOption>) -> RequestObj {
         let parse_mode = options
             .as_ref()
