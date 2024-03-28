@@ -82,7 +82,25 @@ Visit my <a href="https://yong-kang.super.site/">website</a>"#, Some(option)) {
 ```
 
 ### Setting up and testing it as a class
+
 - Check out [example.rs](https://github.com/yongkangc/rustygram/blob/main/example.rs) where there is a concrete example with tests
+
+### Sending CSV file
+
+````rust
+use rustygram::types::{SendMessageOption, SendMessageParseMode};
+
+fn main() {
+  let instance = rustygram::create_bot("189:blablabla", "-10");
+  let option = SendMessageOption { parse_mode: Some(SendMessageParseMode::MarkdownV2) };
+
+  if let Err(_) = rustygram::send_csv(&instance, "example.csv", Some(option)) {
+    // error handling here...
+  }
+}
+```
+
+- Refer to tests.rs for more reference on how to send a CSV file
 
 ## Setting up your environment
 
@@ -99,7 +117,7 @@ $ set BOT_TOKEN=<Your token here>
 
 # Windows PowerShell
 $ $env:BOT_TOKEN=<Your token here>
-```
+````
 
 4. Make sure that your Rust compiler is up to date (`rustygram` currently requires rustc at least version 1.68):
 
